@@ -51,12 +51,33 @@
             <el-tooltip class="item" effect="dark" content="删除" placement="top">
               <el-button type="danger" icon="el-icon-delete" @click="deleteUser(scope.row.id)"></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="编辑角色" placement="top">
-              <el-button type="warning" icon="el-icon-setting"></el-button>
+            <el-tooltip class="item" effect="dark" content="分配角色权限" placement="top">
+              <el-button type="warning" icon="el-icon-setting" @click="editUserRole(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
+
+      <el-dialog title="分配用户权限" :visible.sync="dialogVisible" width="30%">
+        <div>
+          <p>用户名：{{userInfo.username}}</p>
+          <p>角色：{{userInfo.role_name}}</p>
+          <p>
+            <el-select placeholder="请选择" v-model="selectRoleID">
+              <el-option
+                v-for="item in userInfoData"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </p>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveUserRole">确 定</el-button>
+        </span>
+      </el-dialog>
 
       <!--分页-->
       <el-pagination
@@ -194,6 +215,10 @@ export default {
         pagenum: 1,
         pagesize: 10,
       },
+      userInfo: "",
+      userInfoData: [],
+      dialogVisible: false,
+      selectRoleID: "",
     };
   },
   created() {
@@ -258,14 +283,14 @@ export default {
     },
 
     //删除用户信息
-   async deleteUser(id){
-      const {data:res} =await this.$http.delete('users/'+id)
+    async deleteUser(id) {
+      const { data: res } = await this.$http.delete("users/" + id);
       console.log(res);
-      if(res.meta.status !== 200){
-        this.$message.error('删除用户信息失败')
-      }else{
-        this.$message.success('删除用户信息成功')
-        this.getUserList()
+      if (res.meta.status !== 200) {
+        this.$message.error("删除用户信息失败");
+      } else {
+        this.$message.success("删除用户信息成功");
+        this.getUserList();
       }
     },
 
@@ -320,6 +345,39 @@ export default {
       this.total = userslist.data.data.total;
       if (userslist.data.meta.status !== 200) {
         this.$message.error("获取用户列表失败");
+      }
+    },
+
+    //给用户分配角色权限
+    async editUserRole(userRoles) {
+      const { data: res } = await this.$http.get("roles");
+      this.userInfoData = res.data;
+      this.userInfo = userRoles;
+
+      if (res.meta.status !== 200) {
+        this.$message.error("请求失败");
+      } else {
+        this.dialogVisible = true;
+      }
+    },
+
+    //保存用户重新分配的角色
+    async saveUserRole() {
+      if (!this.selectRoleID) {
+        return this.$message.error("请分配用户角色");
+      }
+      const {
+        data: res,
+      } = await this.$http.put(`users/${this.userInfo.id}/role`, {
+        rid: this.selectRoleID,
+      });
+      console.log(this.selectRoleID);
+      if (res.meta.status !== 200) {
+        this.$message.error("请求失败");
+      } else {
+        this.$message.success("分配角色成功");
+        this.getUserList()
+        this.dialogVisible = false;
       }
     },
   },

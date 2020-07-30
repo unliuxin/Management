@@ -7,6 +7,8 @@ import Login from '../components/login/Login.vue'
 import Home from '../views/home/Home.vue'
 import Welcome from '../views/home/homeChild/Welcome.vue'
 import Users from '../views/users/Users.vue'
+import Rights from '../views/rights/Rights.vue'
+import Roles from '../views/roles/Roles.vue'
 Vue.use(VueRouter)
 
 
@@ -32,12 +34,26 @@ const routes = [
                 path: '/users',
                 component: Users
             },
+            {
+                path: '/rights',
+                component: Rights
+            },
+            {
+                path: '/roles',
+                component: Roles
+            },
 
         ]
     }
 
 
 ]
+
+//解决element ui导航栏中的vue-router3.0中重复点菜单报错问题
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err)
+}
 
 const router = new VueRouter({
     routes,
@@ -51,7 +67,6 @@ router.beforeEach((to, from, next) => {
     } else {
         //从sessionStorage获取token
         const tokenStr = window.sessionStorage.getItem('token');
-        console.log(tokenStr);
         if (!tokenStr) {
             next('/login')
         } else {
