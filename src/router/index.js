@@ -11,7 +11,7 @@ import Rights from '../views/rights/Rights.vue'
 import Roles from '../views/roles/Roles.vue'
 import Categories from "../views/goods/Categories.vue"
 import Orders from "../views/orders/Orders.vue"
-
+import Goods from "../views/goods/Goods.vue"
 
 
 import Reports from '../views/reports/Reports.vue'
@@ -63,6 +63,10 @@ const routes = [
             {
                 path: '/orders',
                 component: Orders
+            },
+            {
+                path: '/goods',
+                component: Goods
             },
 
         ]
