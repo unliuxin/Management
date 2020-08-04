@@ -210,7 +210,7 @@ export default {
       userEditVisible: false, //编辑用户窗口
       editUserform: {},
       total: 0, //用户列表总条数
-      paramsUserInfo: {
+      paramsUserInfo: {//分页
         query: "",
         pagenum: 1,
         pagesize: 10,
@@ -248,7 +248,7 @@ export default {
       this.$refs.ruleForm.validate(async (valid) => {
         if (!valid) return;
         const { data: res } = await this.$http.post("users", this.addForm);
-        console.log(res);
+
         if (res.meta.status !== 201) {
           this.$message.error("添加用户失败");
         } else {
