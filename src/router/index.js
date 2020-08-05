@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import NProgress from 'nprogress' //进度条插件
+import 'nprogress/nprogress.css'
 
 
 import Login from '../components/login/Login.vue'
@@ -96,9 +97,13 @@ router.beforeEach((to, from, next) => {
         if (!tokenStr) {
             next('/login')
         } else {
+            NProgress.start(); //进度条开启
             next()
         }
     }
+    router.afterEach(transition => {
+        NProgress.done(); //进度条关闭
+    });
 })
 
 export default router

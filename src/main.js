@@ -7,6 +7,7 @@ import axios from 'axios'
 import echarts from 'echarts'
 import vueTable from 'vue-table-with-tree-grid'
 
+
 axios.defaults.baseURL = 'http://47.115.124.102:8888/api/private/v1/'
 
 Vue.component('table-tree', vueTable)
@@ -17,6 +18,9 @@ axios.interceptors.request.use(config => {
         //为请求对象添加token验证的Authorization
     return config
 })
+
+
+
 Vue.prototype.$http = axios
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 });
 
