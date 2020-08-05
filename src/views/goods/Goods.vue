@@ -26,7 +26,9 @@
         <el-table-column prop="goods_name" label="商品名称" width="500"></el-table-column>
         <el-table-column prop="goods_price" label="商品价格(元)" width="120"></el-table-column>
         <el-table-column prop="goods_weight" label="商品重量" width="80"></el-table-column>
-        <el-table-column prop="add_time | showdate" label="创建时间"></el-table-column>
+        <el-table-column prop="add_time" label="创建时间">
+          <template v-slot:default="scope">{{scope.row.add_time | showdate }}</template>
+        </el-table-column>
         <el-table-column label="操作">
           <template v-slot:default="scope">
             <el-button type="primary" icon="el-icon-edit"></el-button>
